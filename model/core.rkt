@@ -16,7 +16,8 @@
     (#%plain-module-begin ((current-print) (algebraic form)) ...)))
 
 (define-syntax core-top-interaction
-  (μ* form (#%top-interaction . (algebraic form))))
+  (μ* form
+    (#%top-interaction . (algebraic form))))
 
 ;;; ----------------------------------------------------------------------------
 ;;; Syntax

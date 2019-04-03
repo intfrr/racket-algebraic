@@ -5,16 +5,18 @@
                     parse show algebraic))
 
 (provide #%app #%datum
-         (rename-out [module-begin #%module-begin]
-                     [top-interaction #%top-interaction])
+         (rename-out [ext-module-begin #%module-begin]
+                     [ext-top-interaction #%top-interaction])
          (all-defined-out)
          (for-syntax (all-defined-out)))
 
-(define-syntax-rule (module-begin form ...)
-  (#%plain-module-begin (pretty-write (algebraic form)) ...))
+(define-syntax ext-module-begin
+  (μ* (form ...)
+    (#%plain-module-begin ((current-print) (algebraic form)) ...)))
 
-(define-syntax-rule (top-interaction . form)
-  (#%top-interaction . (algebraic form)))
+(define-syntax ext-top-interaction
+  (μ* form
+    (#%top-interaction . (algebraic form))))
 
 ;;; ----------------------------------------------------------------------------
 ;;; Syntax

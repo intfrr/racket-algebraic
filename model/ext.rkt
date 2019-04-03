@@ -33,14 +33,14 @@
       [('let ([p . ts] . cs) . body) (term `((φ ,p let ,cs ,@body) ,@ts))]
       [('letrec () . body) (term body)]
       [('letrec ([p . ts] . cs) . body) (term `((φ ,p letrec ,cs ,@body) fix φ ,p ,@ts))]
-      [($ t1 t2 . ts) (TSeq (term t1) (term `($ ,t2 ,@ts)))]
-      [($ t1) (term t1)]
       [('φ p1 . t2) (values-> TFun (α-rename (patt p1) (term t2)))]
       [('μ p1 . t2) (values-> TMac (α-rename (patt p1) (term t2)))]
+      [($ t1 t2 . ts) (TSeq (term t1) (term `($ ,t2 ,@ts)))]
+      [($ t1) (term t1)]
       [(t1 t2 . ts) (TApp (term t1) (term (cons t2 ts)))]
       [(t1) (term t1)]
-      [x #:if (and (symbol? x) (char-lower-case? (first-char x))) (TVar x)]
-      [x #:if (and (symbol? x) (char-upper-case? (first-char x))) (TCon x)]
+      [x #:if (con-name? x) (TCon x)]
+      [x #:if (var-name? x) (TVar x)]
       [◊ TUni]))
   (define patt
     (function
@@ -48,10 +48,10 @@
       [($ p1 p2 . ps) (PSeq (patt p1) (patt `($ ,p2 ,@ps)))]
       [(  p1) (patt p1)]
       [(  p1 p2 . ps) (PApp (patt p1) (patt `(  ,p2 ,@ps)))]
+      [x #:if (con-name? x) (PCon x)]
+      [x #:if (var-name? x) (PVar x)]
       ['_ PWil]
-      [◊ PUni]
-      [x #:if (and (symbol? x) (char-lower-case? (first-char x))) (PVar x)]
-      [x #:if (and (symbol? x) (char-upper-case? (first-char x))) (PCon x)]))
+      [◊ PUni]))
   (term t))
 
 (define (show a)
@@ -63,14 +63,14 @@
       [(TApp _ _) #:as t (app->list t)]
       [(TFun p1 t2) `(φ ,(patt p1) ,@(app->list t2))]
       [(TMac p1 t2) `(μ ,(patt p1) ,@(app->list t2))]
-      [(TVar x1) (string->symbol (symbol->string x1))]
+      [(TVar x1) (α-restore x1)]
       [(TCon δ1) δ1]
       [TUni '◊]))
   (define patt
     (function
       [(PApp _ _) #:as p (app->list p)]
       [(PSeq _ _) #:as p (seq->list p)]
-      [(PVar x1) (string->symbol (symbol->string x1))]
+      [(PVar x1) (α-restore x1)]
       [(PCon δ1) δ1]
       [PWil '_]
       [PUni '◊]))
@@ -84,15 +84,6 @@
       [(TSeq t1 t2) (append (show-fun t1) (show-fun t2))]))
   (term a))
 
-;;; ----------------------------------------------------------------------------
-;;; Semantics
-
-(define-syntax algebraic
-  (μ t (show (interpret (parse 't)))))
-
-;;; ----------------------------------------------------------------------------
-;;; Pragmatics
-
 (define app->list
   (function
     [(TApp t1 t2) (cons (show t1) (app->list t2))]
@@ -104,6 +95,12 @@
     [(TSeq t1 t2) (cons (show t1) (seq->list t2))]
     [(PSeq p1 p2) (cons (show p1) (seq->list p2))]
     [a (list (show a))]))
+
+;;; ----------------------------------------------------------------------------
+;;; Evaluation Semantics
+
+(define-syntax algebraic
+  (μ t (show (interpret (parse 't)))))
 
 ;;; ============================================================================
 

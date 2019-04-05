@@ -16,11 +16,20 @@ we're going to simplify the surface syntax dramatically by building that
 technique and one more into replacement @id[parse] and @id[print]
 @tech{functions}.
 
-@; -----------------------------------------------------------------------------
+@; =============================================================================
 
 @section[#:tag "tut:ext:syntax"]{The Extended Syntax}
 
-@subsubsub*section{Multi-clause Abstractions}
+The whole point of this exercise is to make @secref{tut:core} easier to work
+with, so we can write more substantial programs. To get there, we'll implement
+two simple rewriting tricks. First, we'll eliminate @emph{most} (!!) of the
+parentheses by generalizing abstractions and applications to multiple clauses or
+arguments with a fun twist. Then, we'll get rid of the boilerplate by
+pre-defining @id[fix], @id[let], and @id[letrec].
+
+@; -----------------------------------------------------------------------------
+
+@subsection[#:tag "tut:ext:abstractions"]{Multi-clause Abstractions}
 
 @tabular[
   #:style full-width
@@ -126,7 +135,9 @@ technique and one more into replacement @id[parse] and @id[print]
   ]
 ]
 
-@subsubsub*section{Application Currying}
+@; -----------------------------------------------------------------------------
+
+@subsection[#:tag "tut:ext:applications"]{Application Currying}
 
 @tabular[
   #:style full-width
@@ -161,7 +172,9 @@ technique and one more into replacement @id[parse] and @id[print]
   ]
 ]
 
-@subsubsub*section{Local Bindings}
+@; -----------------------------------------------------------------------------
+
+@subsection[#:tag "tut:ext:predefs"]{Local Bindings}
 
 @tabular[
   #:style full-width
@@ -186,11 +199,13 @@ technique and one more into replacement @id[parse] and @id[print]
   ]
 ]
 
-@; -----------------------------------------------------------------------------
+@; =============================================================================
 
 @section[#:tag "tut:ext:examples"]{Examples}
 
-@subsubsub*section{Numbers}
+@; -----------------------------------------------------------------------------
+
+@subsection[#:tag "tut:ext:example:numbers"]{Numbers}
 
 @tabular[
   #:style full-width
@@ -211,7 +226,9 @@ technique and one more into replacement @id[parse] and @id[print]
   ]
 ]
 
-@subsubsub*section{Booleans}
+@; -----------------------------------------------------------------------------
+
+@subsection[#:tag "tut:ext:example:booleans"]{Booleans}
 
 @tabular[
   #:style full-width
@@ -261,8 +278,10 @@ technique and one more into replacement @id[parse] and @id[print]
     ]
   ]
 ]
- 
-@subsubsub*section{Lists}
+
+@; -----------------------------------------------------------------------------
+
+@subsection[#:tag "tut:ext:example:lists"]{Lists}
 
 @tabular[
   #:style full-width

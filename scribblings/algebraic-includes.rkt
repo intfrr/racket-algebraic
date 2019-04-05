@@ -202,6 +202,10 @@
   (make-style "grammar"
               (list (make-css-addition "scribblings/css/grammar.css"))))
 
+(define brackets
+  (make-style "brackets"
+              (list (make-css-addition "scribblings/css/brackets.css"))))
+
 (define (grammar name . rules)
   (tabular
    #:sep (hspace 1)
@@ -214,3 +218,12 @@
          null
          (cons (list fst snd (caar rules) (list (hspace 4) (cadar rules)))
                (loop "" "|" (cdr rules)))))))
+
+;;; Extended Syntax
+
+(define-simple-macro (abs name [p ...+ t] ...)
+  (tabular
+   (list (list name (tabular
+                     #:style brackets
+                     #:column-properties '(center)
+                     (list (list p ... t) ...))))))
